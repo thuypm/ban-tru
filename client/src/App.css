@@ -2,8 +2,9 @@
   @apply h-[100vh] max-w-[576px] w-[100vw] overflow-auto mx-auto;
 }
 .checkmark {
-  font-size: 50px;
+  font-size: 20px;
   color: #4caf50;
+  @apply bg-green-100;
   opacity: 1;
   animation: fadeOut 1s ease-in-out forwards;
 }

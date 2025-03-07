@@ -11,7 +11,7 @@ function ResultInput() {
   return (
     <div>
       <div className="flex items-center relative">
-        <div class="checkmark">✔</div>
+        {/* <div class="checkmark absolute">✔</div> */}
         <p
           className={clsx(
             "mt-4 text-lg text-center my-2 py-2 flex-1",
