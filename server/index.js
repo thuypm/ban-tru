@@ -11,7 +11,8 @@ const path = require("path");
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/static", express.static(path.join(__dirname, "static/static")));
+// app.use("/static", express.static(path.join(__dirname, "static/static")));
+app.use(express.static(path.join(__dirname, "static")));
 app.get("/api/get-all", (req, res) => {
   res.json(getJsonData());
 });
