@@ -39,7 +39,7 @@ export default function BarcodeScanner() {
           setResult(result.getText());
           codeReader.reset();
           await tickData(Number(result.getText()));
-          setTimeout(() => startScanner(), 1000); // Quét lại sau 1 giây
+          startScanner(); // Quét lại sau 1 giây
         }
       }
     );
