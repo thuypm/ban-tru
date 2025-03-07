@@ -1,9 +1,9 @@
 import { BrowserMultiFormatReader } from "@zxing/library";
-import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useAppContext } from "./Appcontext";
 import Eated from "./components/Eated";
+import Header from "./components/Header";
 import Missing from "./components/Missing";
 import ResultInput from "./components/ResultInput";
 export default function BarcodeScanner() {
@@ -52,17 +52,15 @@ export default function BarcodeScanner() {
           Đang tải....
         </div>
       ) : null}
+      <Header />
 
-      <h2 className="text-xl font-bold text-center">
-        {dayjs().format("ddd, DD-MM-YY")} Quét mã vạch
-      </h2>
-      <div className="w-full ">
+      <div className="w-full">
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted
-          className="w-full border-gray-300 aspect-video"
+          className="w-full border-gray-300 aspect-video h-[240px]"
         />
       </div>
       <ResultInput result={result} />

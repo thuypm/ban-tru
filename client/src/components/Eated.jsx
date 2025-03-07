@@ -1,11 +1,16 @@
+import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useAppContext } from "../Appcontext";
 
 function Eated() {
-  const { dataJSON } = useAppContext();
+  const { dataJSON, filterLocation } = useAppContext();
   const list = useMemo(() => {
-    return dataJSON.filter((e) => e.tick);
-  }, [dataJSON]);
+    return filterLocation
+      ? dataJSON
+          .filter((e) => e.location === filterLocation)
+          .filter((e) => e.tick)
+      : dataJSON.filter((e) => e.tick);
+  }, [dataJSON, filterLocation]);
 
   return (
     <div className="overflow-auto flex flex-col">
@@ -24,6 +29,7 @@ function Eated() {
               {" "}
               {`${item.class} - ${item.name}`}
             </div>
+            <div>{dayjs(item.time).format("HH:mm")}</div>
           </div>
         ))}
       </div>

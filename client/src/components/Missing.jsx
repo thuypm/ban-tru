@@ -2,10 +2,14 @@ import { useMemo } from "react";
 import { useAppContext } from "../Appcontext";
 
 function Missing() {
-  const { dataJSON } = useAppContext();
+  const { dataJSON, filterLocation } = useAppContext();
   const list = useMemo(() => {
-    return dataJSON.filter((e) => !e.tick);
-  }, [dataJSON]);
+    return filterLocation
+      ? dataJSON
+          .filter((e) => e.location === filterLocation)
+          .filter((e) => !e.tick)
+      : dataJSON.filter((e) => !e.tick);
+  }, [dataJSON, filterLocation]);
   return (
     <div className="overflow-auto flex flex-col">
       <div className="flex justify-center items-center pb-1">

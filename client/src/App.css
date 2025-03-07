@@ -1,3 +1,23 @@
 #app {
   @apply h-[100vh] max-w-[576px] w-[100vw] overflow-auto mx-auto;
 }
+.checkmark {
+  font-size: 50px;
+  color: #4caf50;
+  opacity: 1;
+  animation: fadeOut 1s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.check-container {
+  font-size: 50px;
+  position: relative;
+  display: inline-block;
+}
