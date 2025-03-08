@@ -1,47 +1,48 @@
-import axios from "axios";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { io } from "socket.io-client";
+
 const AppContext = createContext();
-const ting = new Audio("/ding.mp3");
-const wrong = new Audio("/wrong.mp3");
+// const ting = new Audio("/ding.mp3");
+// const wrong = new Audio("/wrong.mp3");
+
 export function AppProvider({ children }) {
   const [dataJSON, setDataJSON] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [rootData, setRootData] = useState(false);
   const [filterLocation, setFilterLocation] = useState("TV");
   const [currentValueInput, setCurrentValueInput] = useState("");
+  const socketRef = useRef(null);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await axios.request({
-        baseURL: process.env.REACT_APP_API,
-        url: "api/get-all",
-      });
-      setDataJSON(data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    socketRef.current = io(process.env.REACT_APP_API);
+    socketRef.current.on("get-all", (data) => {
+      setRootData(data);
+      setDataJSON(data?.filter((e) => e.isRegister));
+    });
+    socketRef.current.on("connect_error", () => {
+      socketRef.current.auth.token = "abcd";
+      socketRef.current.connect();
+    });
+
+    return () => {
+      if (socketRef.current) socketRef.current.disconnect();
+    };
   }, []);
 
-  const tickData = useCallback(async (num) => {
-    setLoading(true);
-    try {
-      const { data } = await axios.request({
-        baseURL: process.env.REACT_APP_API,
-        url: "api/tick",
-        method: "POST",
-        data: {
-          code: num,
-        },
-      });
-      setCurrentValueInput(`${num}`);
-      setDataJSON(data);
-      if (data?.find((e) => e.code === num)) ting.play();
-      else wrong.play();
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+  const loadData = useCallback(() => {
+    if (socketRef.current) socketRef.current.emit("get-all");
+  }, []);
+
+  const tickData = useCallback((num) => {
+    if (socketRef.current) socketRef.current.emit("tick", num);
+    setCurrentValueInput(`${num}`);
   }, []);
 
   return (
@@ -57,6 +58,8 @@ export function AppProvider({ children }) {
         setCurrentValueInput,
         filterLocation,
         setFilterLocation,
+        rootData,
+        setRootData,
       }}>
       {children}
     </AppContext.Provider>

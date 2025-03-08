@@ -3,8 +3,9 @@ import { useAppContext } from "../Appcontext";
 
 function Missing() {
   const { dataJSON, filterLocation } = useAppContext();
+
   const list = useMemo(() => {
-    return filterLocation
+    return filterLocation?.length
       ? dataJSON
           .filter((e) => e.location === filterLocation)
           .filter((e) => !e.tick)

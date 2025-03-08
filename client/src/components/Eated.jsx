@@ -1,16 +1,17 @@
+import { clsx } from "clsx";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useAppContext } from "../Appcontext";
 
 function Eated() {
-  const { dataJSON, filterLocation } = useAppContext();
+  const { rootData, filterLocation } = useAppContext();
   const list = useMemo(() => {
-    return filterLocation
-      ? dataJSON
+    return filterLocation?.length
+      ? rootData
           .filter((e) => e.location === filterLocation)
           .filter((e) => e.tick)
-      : dataJSON.filter((e) => e.tick);
-  }, [dataJSON, filterLocation]);
+      : rootData.filter((e) => e.tick);
+  }, [rootData, filterLocation]);
 
   return (
     <div className="overflow-auto flex flex-col">
@@ -23,7 +24,10 @@ function Eated() {
         {list.map((item) => (
           <div
             key={item.code}
-            className="flex gap-2 border-b border-b-gray-300 py-1">
+            className={clsx(
+              "flex gap-2 border-b border-b-gray-300 py-1 px-0.5",
+              !item.isRegister && item.tick ? "bg-red-200" : ""
+            )}>
             <div className="w-6">{item.code}</div>
             <div className="flex-1 overflow-hidden">
               {" "}

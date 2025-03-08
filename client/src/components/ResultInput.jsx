@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAppContext } from "../Appcontext";
 function ResultInput() {
   const { dataJSON, tickData, loadData, currentValueInput } = useAppContext();
@@ -7,11 +7,25 @@ function ResultInput() {
   const findStudent = useMemo(() => {
     return dataJSON?.find((item) => item.code === Number(currentValueInput));
   }, [dataJSON, currentValueInput]);
-
+  const timeoutAnimation = useRef(null);
+  const [showTick, setShowTick] = useState(false);
+  useEffect(() => {
+    setShowTick(true);
+    if (timeoutAnimation) clearTimeout(timeoutAnimation);
+    timeoutAnimation.current = setTimeout(() => {
+      setShowTick(false);
+    }, [1000]);
+  }, [findStudent]);
   return (
     <div>
       <div className="flex items-center relative">
-        {/* <div class="checkmark absolute">✔</div> */}
+        <div
+          class={clsx(
+            " absolute top-8 left-4 opacity-0",
+            showTick ? "checkmark" : ""
+          )}>
+          ✔
+        </div>
         <p
           className={clsx(
             "mt-4 text-lg text-center my-2 py-2 flex-1",

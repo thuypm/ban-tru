@@ -27,10 +27,8 @@ app.use(express.static(path.join(__dirname, "static")));
 
 io.on("connection", (socket) => {
   console.log("A user connected");
-
   // Send initial data
   socket.emit("get-all", getJsonData());
-
   // Handle tick event
   socket.on("tick", (code) => {
     tickUpdateData(code);
@@ -47,9 +45,6 @@ app.get("*", (req, res) => {
 });
 
 server.listen(5000, async () => {
-  // await copyAllRootData();
-  await copyExcelDataWithStyle();
-  syncData();
   cron.schedule("0 6 * * *", async () => {
     await copyAllRootData();
     await copyExcelDataWithStyle();

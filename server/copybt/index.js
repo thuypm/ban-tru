@@ -6,7 +6,7 @@ const { filterByLocation } = require("./filterByLocation");
 const { filterCS2 } = require("./filterCS2");
 // Chạy hàm
 const sourceUrl = path.resolve(
-  `E:/OneDrive - Marie Curie/11. bán trú/đăng ký bán trú hằng ngày 2.xlsx`
+  `E:/OneDrive - Marie Curie/11. bán trú/đăng ký bán trú hằng ngày.xlsx`
 ); // Đường dẫn file Excel nguồn
 const targeUrl = path.resolve(
   `E:/OneDrive - Marie Curie/11. bán trú/Diem danh ban tru.xlsx`
@@ -100,6 +100,7 @@ async function copyExcelDataWithStyle(
       }
     }
   });
+
   filterCS2(workbook, newWorkbook);
   filterByLocation(newWorkbook);
   filterByTeacher(newWorkbook);

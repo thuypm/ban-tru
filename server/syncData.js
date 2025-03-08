@@ -9,6 +9,9 @@ const setRootData = (val) => {
 const getRootData = (val) => {
   return rootData;
 };
+const setJSonData = (val) => {
+  return (jsonData = val);
+};
 
 const syncData = async () => {
   const workbook = new ExcelJS.Workbook();
@@ -20,26 +23,15 @@ const syncData = async () => {
     process.exit(1);
   }
 
-  const data = [];
   worksheet.eachRow((row, rowNumber) => {
     if (rowNumber === 1) return; // Bỏ qua tiêu đề
+    const itemCode = row.getCell(1).value;
 
-    const rowData = {
-      code: row.getCell(1).value, // Cột A
-      name: row.getCell(2).value, // Cột B
-      class: row.getCell(3).value, // Cột C
-      teacher: row.getCell(6).value, // Cột F
-      location: row.getCell(7).value, // Cột G
-      tick: false,
-      time: new Date().valueOf(),
-    };
-
-    if (rowData.code) {
-      data.push(rowData);
-    }
+    jsonData.forEach((item) => {
+      if (item.code === itemCode) item.isRegister = true;
+    });
   });
 
-  jsonData = data;
   console.log("Dữ liệu đã được trích xuất thành công");
 };
 
@@ -62,4 +54,5 @@ module.exports = {
   resetData,
   setRootData,
   getRootData,
+  setJSonData,
 };

@@ -1,10 +1,10 @@
 const ExcelJS = require("exceljs");
 const path = require("path");
-const { setRootData } = require("../syncData");
+const { setJSonData } = require("../syncData");
 
 // Đường dẫn file Excel nguồn
 const sourceUrl = path.resolve(
-  "E:/OneDrive - Marie Curie/11. bán trú/đăng ký bán trú hằng ngày 2.xlsx"
+  "E:/OneDrive - Marie Curie/11. bán trú/đăng ký bán trú hằng ngày.xlsx"
 );
 
 // Hàm đọc và chuyển đổi dữ liệu
@@ -24,12 +24,14 @@ async function copyAllRootData() {
       class: row.getCell(4).value, // Cột D
       teacher: row.getCell(7).value, // Cột G
       location: row.getCell(8).value, // Cột H
+      tick: false,
+      time: new Date().valueOf(),
+      isRegister: false,
     };
 
     jsonData.push(item);
   });
-
-  setRootData(jsonData);
+  setJSonData(jsonData.filter((user) => user.code));
 }
 module.exports = {
   copyAllRootData,
