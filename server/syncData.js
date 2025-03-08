@@ -1,50 +1,65 @@
-const xlsx = require("xlsx");
-const fs = require("fs");
-
-// Đọc file Excel
+const ExcelJS = require("exceljs");
 const filePath = "E:/OneDrive - Marie Curie/11. bán trú/Diem danh ban tru.xlsx";
-const workbook = xlsx.readFile(filePath);
-
-// Chọn sheet 'cs1'
-const sheetName = "cs1";
-const worksheet = workbook.Sheets[sheetName];
-
-if (!worksheet) {
-  console.error(`Sheet "${sheetName}" không tồn tại.`);
-  process.exit(1);
-}
 let jsonData = [];
-const syncData = () => {
-  // Chuyển đổi dữ liệu sang JSON
-  const data = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+let rootData = [];
 
-  // Lọc dữ liệu từ A đến G, bỏ qua dòng tiêu đề
-  const json = data.slice(1).map((row) => ({
-    code: row[0], // Cột A
-    name: row[1], // Cột B
-    class: row[2], // Cột C
-    teacher: row[5], // Cột F
-    location: row[6], // Cột G
-    tick: false,
-    time: new Date().valueOf(),
-  }));
+const setRootData = (val) => {
+  rootData = val;
+};
+const getRootData = (val) => {
+  return rootData;
+};
 
-  // Ghi dữ liệu vào file JSON
-  //   const outputFilePath = "./output.json";
-  //   fs.writeFileSync(outputFilePath, JSON.stringify(jsonData, null, 2), "utf-8");
-  console.log(`Dữ liệu đã được trích xuất thành công `);
-  jsonData = json.filter((e) => e.code);
+const syncData = async () => {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+  const worksheet = workbook.getWorksheet("cs1");
+
+  if (!worksheet) {
+    console.error(`Sheet "cs1" không tồn tại.`);
+    process.exit(1);
+  }
+
+  const data = [];
+  worksheet.eachRow((row, rowNumber) => {
+    if (rowNumber === 1) return; // Bỏ qua tiêu đề
+
+    const rowData = {
+      code: row.getCell(1).value, // Cột A
+      name: row.getCell(2).value, // Cột B
+      class: row.getCell(3).value, // Cột C
+      teacher: row.getCell(6).value, // Cột F
+      location: row.getCell(7).value, // Cột G
+      tick: false,
+      time: new Date().valueOf(),
+    };
+
+    if (rowData.code) {
+      data.push(rowData);
+    }
+  });
+
+  jsonData = data;
+  console.log("Dữ liệu đã được trích xuất thành công");
 };
-const getJsonData = () => {
-  return jsonData;
+
+const getJsonData = () => jsonData;
+
+const resetData = () => {
+  jsonData.forEach((e) => (e.tick = false));
 };
+
 const tickUpdateData = (code) => {
   jsonData.forEach((item) => {
     if (item.code === code) item.tick = true;
   });
 };
+
 module.exports = {
   syncData,
   getJsonData,
   tickUpdateData,
+  resetData,
+  setRootData,
+  getRootData,
 };
