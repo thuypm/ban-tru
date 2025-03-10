@@ -45,6 +45,9 @@ app.get("*", (req, res) => {
 });
 
 server.listen(5000, async () => {
+  await copyAllRootData();
+  await copyExcelDataWithStyle();
+  syncData();
   cron.schedule("0 6 * * *", async () => {
     await copyAllRootData();
     await copyExcelDataWithStyle();

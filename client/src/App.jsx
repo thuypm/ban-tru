@@ -14,20 +14,6 @@ export default function BarcodeScanner() {
 
   useEffect(() => {
     loadData();
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { facingMode: "environment" },
-      })
-      .then((stream) => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-        startScanner();
-      })
-      .catch((err) => console.error("Lỗi truy cập camera:", err));
-    return () => {
-      codeReader.reset();
-    };
   }, [loadData]);
 
   const startScanner = () => {
@@ -55,6 +41,28 @@ export default function BarcodeScanner() {
       <Header />
 
       <div className="w-full">
+        <div className="p-2 flex justify-center">
+          <button
+            className="flex-[0_0_auto] bg-green-400 px-4 py-1 rounded text-white"
+            onClick={() => {
+              navigator.mediaDevices
+                .getUserMedia({
+                  video: { facingMode: "environment" },
+                })
+                .then((stream) => {
+                  if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    startScanner();
+                  }
+                })
+                .catch((err) => console.error("Lỗi truy cập camera:", err));
+              return () => {
+                codeReader.reset();
+              };
+            }}>
+            Bật camera
+          </button>
+        </div>
         <video
           ref={videoRef}
           autoPlay

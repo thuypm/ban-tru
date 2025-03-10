@@ -12,9 +12,8 @@ function Eated() {
             .filter((e) => e.location === filterLocation)
             .filter((e) => e.tick)
         : rootData.filter((e) => e.tick)
-    )?.sort((a, b) => a - b);
+    )?.sort((a, b) => b.time - a.time);
   }, [rootData, filterLocation]);
-  console.log(list);
 
   return (
     <div className="overflow-auto flex flex-col">
