@@ -43,7 +43,10 @@ const resetData = () => {
 
 const tickUpdateData = (code) => {
   jsonData.forEach((item) => {
-    if (item.code === code) item.tick = true;
+    if (item.code === code) {
+      item.tick = true;
+      item.time = new Date().valueOf();
+    }
   });
 };
 

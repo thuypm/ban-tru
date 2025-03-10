@@ -6,12 +6,15 @@ import { useAppContext } from "../Appcontext";
 function Eated() {
   const { rootData, filterLocation } = useAppContext();
   const list = useMemo(() => {
-    return filterLocation?.length
-      ? rootData
-          .filter((e) => e.location === filterLocation)
-          .filter((e) => e.tick)
-      : rootData.filter((e) => e.tick);
+    return (
+      filterLocation?.length
+        ? rootData
+            .filter((e) => e.location === filterLocation)
+            .filter((e) => e.tick)
+        : rootData.filter((e) => e.tick)
+    )?.sort((a, b) => a - b);
   }, [rootData, filterLocation]);
+  console.log(list);
 
   return (
     <div className="overflow-auto flex flex-col">
