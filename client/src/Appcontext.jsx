@@ -15,12 +15,13 @@ const AppContext = createContext();
 export function AppProvider({ children }) {
   const [dataJSON, setDataJSON] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [rootData, setRootData] = useState(false);
+  const [rootData, setRootData] = useState([]);
   const [filterLocation, setFilterLocation] = useState("TV");
   const [currentValueInput, setCurrentValueInput] = useState("");
   const socketRef = useRef(null);
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_API);
     socketRef.current = io(process.env.REACT_APP_API);
     socketRef.current.on("get-all", (data) => {
       setRootData(data);
