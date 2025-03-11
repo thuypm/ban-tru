@@ -27,8 +27,10 @@ async function filterCS2(oldWorkBook, newWorkbook) {
     // So sánh nếu tiêu đề cột là ngày hiện tại
 
     if (
-      dayjsToExcelDate(dayjs(cell.value)) === dayjsToExcelDate(today) ||
-      dayjsToExcelDate(dayjs(cell.value?.result)) === dayjsToExcelDate(today)
+      cell.value?.result
+        ? dayjsToExcelDate(dayjs(cell.value?.result)) ===
+          dayjsToExcelDate(today)
+        : dayjsToExcelDate(dayjs(cell.value)) === dayjsToExcelDate(today)
     ) {
       todayColumnIndex = colIndex; // Lưu index của cột ngày hiện tại
     }
