@@ -25,7 +25,6 @@ async function filterCS2(oldWorkBook, newWorkbook) {
   let todayColumnIndex = -1;
   headerRow.eachCell((cell, colIndex) => {
     // So sánh nếu tiêu đề cột là ngày hiện tại
-    console.log(cell.value);
 
     if (
       dayjsToExcelDate(dayjs(cell.value)) === dayjsToExcelDate(today) ||

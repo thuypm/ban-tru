@@ -68,7 +68,7 @@ export default function BarcodeScanner() {
           autoPlay
           playsInline
           muted
-          className="w-full border-gray-300 aspect-video h-[240px]"
+          className="w-full border-gray-300 aspect-video h-[200px]"
         />
       </div>
       <ResultInput result={result} />

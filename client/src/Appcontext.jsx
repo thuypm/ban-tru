@@ -22,6 +22,7 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     socketRef.current = io(process.env.REACT_APP_API);
+    // socketRef.current = io("http://localhost:5000");
     socketRef.current.on("get-all", (data) => {
       setRootData(data);
       setDataJSON(data?.filter((e) => e.isRegister));

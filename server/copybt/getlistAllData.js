@@ -25,7 +25,8 @@ async function copyAllRootData() {
       teacher: row.getCell(7).value, // Cột G
       location: row.getCell(8).value, // Cột H
       tick: false,
-      time: new Date().valueOf(),
+      time: [],
+      lastedCheck: null,
       isRegister: false,
     };
 

@@ -12,7 +12,7 @@ function Eated() {
             .filter((e) => e.location === filterLocation)
             .filter((e) => e.tick)
         : rootData.filter((e) => e.tick)
-    )?.sort((a, b) => b.time - a.time);
+    )?.sort((a, b) => b.lastedCheck - a.lastedCheck);
   }, [rootData, filterLocation]);
 
   return (
@@ -28,6 +28,7 @@ function Eated() {
             key={item.code}
             className={clsx(
               "flex gap-2 border-b border-b-gray-300 py-1 px-0.5",
+              item.time?.length > 1 ? "bg-yellow-200" : "",
               !item.isRegister && item.tick ? "bg-red-200" : ""
             )}>
             <div className="w-6">{item.code}</div>
@@ -35,7 +36,11 @@ function Eated() {
               {" "}
               {`${item.class} - ${item.name}`}
             </div>
-            <div>{dayjs(item.time).format("HH:mm")}</div>
+            <div>
+              {item.time?.map((time) => (
+                <div key={time}>{dayjs(time).format("HH:mm")}</div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

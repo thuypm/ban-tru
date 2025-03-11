@@ -44,8 +44,12 @@ const resetData = () => {
 const tickUpdateData = (code) => {
   jsonData.forEach((item) => {
     if (item.code === code) {
+      const timeCurrent = new Date().valueOf();
       item.tick = true;
-      item.time = new Date().valueOf();
+      item.lastedCheck = timeCurrent;
+      item.time = item.time?.length
+        ? [timeCurrent, ...item.time]
+        : [timeCurrent];
     }
   });
 };
