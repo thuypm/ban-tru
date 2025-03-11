@@ -41,7 +41,10 @@ async function copyExcelDataWithStyle(
   let todayColumnIndex = -1;
   headerRow.eachCell((cell, colIndex) => {
     // So sánh nếu tiêu đề cột là ngày hiện tại
-    if (dayjsToExcelDate(dayjs(cell.value)) === dayjsToExcelDate(today)) {
+    if (
+      dayjsToExcelDate(dayjs(cell.value)) === dayjsToExcelDate(today) ||
+      dayjsToExcelDate(dayjs(cell.value?.result)) === dayjsToExcelDate(today)
+    ) {
       todayColumnIndex = colIndex; // Lưu index của cột ngày hiện tại
     }
   });
