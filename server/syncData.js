@@ -3,6 +3,14 @@ const filePath = "E:/OneDrive - Marie Curie/11. bán trú/Diem danh ban tru.xlsx
 let jsonData = [];
 let rootData = [];
 
+let MC2JsonData = [];
+const getMC2RootData = () => {
+  return MC2JsonData;
+};
+const setMC2JSonData = (val) => {
+  MC2JsonData = val;
+};
+
 const setRootData = (val) => {
   rootData = val;
 };
@@ -17,21 +25,24 @@ const syncData = async () => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(filePath);
   const worksheet = workbook.getWorksheet("cs1");
-
-  if (!worksheet) {
-    console.error(`Sheet "cs1" không tồn tại.`);
-    process.exit(1);
-  }
+  const MC2worksheet = workbook.getWorksheet("cs2");
 
   worksheet.eachRow((row, rowNumber) => {
     if (rowNumber === 1) return; // Bỏ qua tiêu đề
     const itemCode = row.getCell(1).value;
 
     jsonData.forEach((item) => {
-      if (item.code === itemCode) item.isRegister = true;
+      if (item.id === itemCode) item.isRegister = true;
     });
   });
 
+  MC2worksheet.eachRow((row, rowNumber) => {
+    if (rowNumber === 1) return; // Bỏ qua tiêu đề
+    const itemCode = row.getCell(2).value;
+    MC2JsonData.forEach((item) => {
+      if (item.id === itemCode) item.isRegister = true;
+    });
+  });
   console.log("Dữ liệu đã được trích xuất thành công");
 };
 
@@ -62,4 +73,6 @@ module.exports = {
   setRootData,
   getRootData,
   setJSonData,
+  getMC2RootData,
+  setMC2JSonData,
 };

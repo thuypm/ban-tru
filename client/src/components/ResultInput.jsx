@@ -1,4 +1,6 @@
 import { clsx } from "clsx";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAppContext } from "../Appcontext";
 function ResultInput() {
@@ -20,7 +22,7 @@ function ResultInput() {
     <div>
       <div className="flex items-center relative">
         <div
-          class={clsx(
+          className={clsx(
             " absolute top-8 left-4 opacity-0",
             showTick ? "checkmark" : ""
           )}>
@@ -41,19 +43,20 @@ function ResultInput() {
             - {findStudent ? findStudent.name : `Chưa có tên`}{" "}
           </span>
         </p>
-        <div className="absolute top0 right-2 top-5">
-          <button
-            className="p-2 bg-yellow-400 rounded"
+        <div className="absolute top0 right-1 top-4">
+          <Button
+            className=""
+            severity="warning"
             type="button"
             onClick={loadData}>
             <img src="reload.svg" className="w-4" />
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="flex gap-4 px-[8px] w-full">
-        <div className=" flex-[1_1_auto]">
-          <input
+        <div className="flex-[1_1_auto]">
+          <InputText
             type="number"
             pattern="\d*"
             onKeyDown={(e) => {
@@ -74,19 +77,19 @@ function ResultInput() {
             value={inputData}
             onChange={(e) => setInputData(e.target.value)}
             placeholder="Nhập mã định danh"
-            className="border border-gray-300 p-2 rounded flex-1 w-full"
+            className="border flex-1 w-full"
           />
         </div>
 
-        <button
-          className="flex-[0_0_auto] bg-blue-400 px-4 rounded text-white"
+        <Button
+          severity="success"
           type="button"
           onClick={() => {
             if (inputData?.trim()) tickData(Number(inputData));
             setInputData("");
           }}>
           Điểm danh
-        </button>
+        </Button>
       </div>
     </div>
   );

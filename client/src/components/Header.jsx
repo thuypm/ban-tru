@@ -1,29 +1,30 @@
 import dayjs from "dayjs";
+import { Dropdown } from "primereact/dropdown";
+import { useMemo } from "react";
+import { Link } from "react-router";
 import { useAppContext } from "../Appcontext";
 export default function Header() {
-  const { filterLocation, setFilterLocation } = useAppContext();
-
+  const { filterLocation, setFilterLocation, dataJSON } = useAppContext();
+  const uniqueLocations = useMemo(() => {
+    const uniqueLocations = [...new Set(dataJSON.map((item) => item.location))];
+    return uniqueLocations;
+  }, [dataJSON]);
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center px-2">
       <h2 className="text-xl font-bold text-center">
-        {dayjs().format("ddd, DD-MM-YY")}
+        <Link to={"/"}>{dayjs().format("ddd, DD-MM-YY")}</Link>
       </h2>
       <div className="px-4">
-        <select
+        <Dropdown
+          className="w-40"
+          options={uniqueLocations.map((e) => ({
+            label: e,
+            value: e,
+          }))}
           value={filterLocation}
           onChange={(e) => {
             setFilterLocation(e.target.value);
-          }}
-          id="countries"
-          class="bg-gray-50 px-4 border border-gray-300 text-gray-900 text-sm rounded
-             focus:ring-blue-500 focus:border-blue-500 
-             block w-full py-2 dark:bg-gray-700
-              dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-               dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option value={""}>Toàn bộ</option>
-          <option value={"TV"}>TV</option>
-          <option value="P.ăn">P.ăn</option>
-        </select>
+          }}></Dropdown>
       </div>
     </div>
   );

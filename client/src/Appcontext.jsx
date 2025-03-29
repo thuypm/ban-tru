@@ -14,6 +14,7 @@ const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [dataJSON, setDataJSON] = useState([]);
+  const [mc2dataJSON, setMC2DataJSON] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rootData, setRootData] = useState([]);
   const [filterLocation, setFilterLocation] = useState("TV");
@@ -26,6 +27,9 @@ export function AppProvider({ children }) {
     socketRef.current.on("get-all", (data) => {
       setRootData(data);
       setDataJSON(data?.filter((e) => e.isRegister));
+    });
+    socketRef.current.on("get-all-mc2", (data) => {
+      setMC2DataJSON(data);
     });
     socketRef.current.on("connect_error", () => {
       socketRef.current.auth.token = "abcd";
@@ -61,6 +65,7 @@ export function AppProvider({ children }) {
         setFilterLocation,
         rootData,
         setRootData,
+        mc2dataJSON,
       }}>
       {children}
     </AppContext.Provider>

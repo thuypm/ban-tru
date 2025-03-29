@@ -22,3 +22,9 @@
   position: relative;
   display: inline-block;
 }
+.thin-table {
+  th,
+  tr td {
+    @apply p-1;
+  }
+}

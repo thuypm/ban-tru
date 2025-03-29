@@ -15,7 +15,7 @@ async function filterByLocation(workbook) {
   sheet.eachRow((row, rowIndex) => {
     if (rowIndex > 1) {
       countTotal++;
-      const gvptValue = row.getCell(7).value; // Lấy giá trị ở cột location
+      const gvptValue = row.getCell(8).value; // Lấy giá trị ở cột location
       if (gvptValue && !locationColumnValues.includes(gvptValue.trim())) {
         locationColumnValues.push(gvptValue.trim()); // Thêm giá trị vào mảng
       }
@@ -37,12 +37,12 @@ async function filterByLocation(workbook) {
     newHeaderRow.commit(); // Lưu lại dòng mới
 
     // Lọc và sao chép dữ liệu (bao gồm style)
-    locationSheet.getColumn(2 + 5).width = 30;
-    locationSheet.getColumn(6 + 5).width = 10;
+    locationSheet.getColumn(2 + 6).width = 30;
+    locationSheet.getColumn(6 + 6).width = 10;
     sheet.eachRow((row, rowIndex) => {
       if (rowIndex > 1) {
         // Bỏ qua tiêu đề
-        const gvptValue = row.getCell(7).value; // Lấy giá trị ở cột GVPT
+        const gvptValue = row.getCell(8).value; // Lấy giá trị ở cột GVPT
         if (gvptValue?.toString().trim() === item) {
           countGv++;
 
@@ -70,7 +70,7 @@ async function filterByLocation(workbook) {
     sheet.getRow(2 + index).getCell(10).value = gv;
     let cntGV = 0;
     sheet.eachRow((row) => {
-      if (row.getCell(7).value?.trim() === gv) cntGV += 1;
+      if (row.getCell(8).value?.trim() === gv) cntGV += 1;
     });
     sheet.getRow(2 + index).getCell(11).value = cntGV;
   });

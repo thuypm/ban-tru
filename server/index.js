@@ -7,6 +7,7 @@ const {
   jsonData,
   getJsonData,
   tickUpdateData,
+  getMC2RootData,
 } = require("./syncData");
 const path = require("path");
 const { copyExcelDataWithStyle } = require("./copybt");
@@ -29,6 +30,7 @@ io.on("connection", (socket) => {
   console.log("A user connected");
   // Send initial data
   socket.emit("get-all", getJsonData());
+  socket.emit("get-all-mc2", getMC2RootData());
   // Handle tick event
   socket.on("tick", (code) => {
     tickUpdateData(code);
@@ -39,7 +41,9 @@ io.on("connection", (socket) => {
     console.log("A user disconnected");
   });
 });
-
+app.get("/api/get-all", (req, res) => {
+  res.json(getMC2RootData());
+});
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
 });

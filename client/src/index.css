@@ -1,10 +1,28 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, tailwind-utilities, primereact;
+
+/* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
+@import "primereact/resources/themes/lara-light-blue/theme.css"
+  layer(primereact);
+@layer tailwind-base {
+  @tailwind base;
+}
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
 html,
 body {
-  @apply font-sans text-sm;
+  @apply font-sans text-sm p-0 m-0;
 }
 #root {
   @apply flex justify-center w-full;
+}
+.border-b-gray-300 {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+}
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }

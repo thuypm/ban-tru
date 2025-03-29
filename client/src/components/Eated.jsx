@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import dayjs from "dayjs";
+import { Button } from "primereact/button";
 import { useMemo } from "react";
 import { useAppContext } from "../Appcontext";
 
@@ -18,9 +19,9 @@ function Eated() {
   return (
     <div className="overflow-auto flex flex-col">
       <div className="flex justify-center items-center pb-1">
-        <button className="flex-[0_0_auto] bg-green-400 px-4 py-2 rounded text-white">
+        <Button className="flex-[0_0_auto]" severity="success">
           Đã ăn:<b> {list.length}</b>
-        </button>
+        </Button>
       </div>
       <div className="overflow-auto h-fit">
         {list.map((item) => (

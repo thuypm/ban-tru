@@ -82,21 +82,21 @@ async function copyExcelDataWithStyle(
       if (todayCell.value?.toString().trim()?.toLowerCase() === "x") {
         // Kiểm tra nếu giá trị là "x"
         const newRow = newSheet.addRow(); // Tạo hàng mới trong file đích
-        for (let col = 2; col <= 8; col++) {
+        for (let col = 2; col <= 9; col++) {
           const cell = row.getCell(col); // Lấy ô trong file gốc
           const newCell = newRow.getCell(col - 1); // Tương ứng cột mới
           newCell.value = cell.value; // Sao chép giá trị
           newCell.style = { ...cell.style }; // Sao chép style
         }
         // Thêm giá trị ngày hiện tại vào cột mới
-        const newTodayCell = newRow.getCell(8);
+        const newTodayCell = newRow.getCell(9);
         newTodayCell.value = "x";
         newTodayCell.style = {
           font: { italic: true, color: { argb: "FF00FF" } }, // Font tím nghiêng
           alignment: { horizontal: "center" },
         };
-        newSheet.getColumn(2).width = 30;
-        newSheet.getColumn(6).width = 10;
+        newSheet.getColumn(3).width = 30;
+        newSheet.getColumn(7).width = 10;
         newSheet.autoFilter = {
           from: "A1", // Bắt đầu từ cột A
           to: "G1", // Kết thúc ở cột G

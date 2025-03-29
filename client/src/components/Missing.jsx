@@ -1,3 +1,4 @@
+import { Button } from "primereact/button";
 import { useMemo } from "react";
 import { useAppContext } from "../Appcontext";
 
@@ -14,9 +15,9 @@ function Missing() {
   return (
     <div className="overflow-auto flex flex-col">
       <div className="flex justify-center items-center pb-1">
-        <button className="flex-[0_0_auto] bg-red-400 px-4 py-2 rounded text-white">
+        <Button severity="danger">
           Chưa ăn:<b> {list.length}</b>
-        </button>
+        </Button>
       </div>
       <div className="overflow-auto h-fit">
         {list.map((item) => (

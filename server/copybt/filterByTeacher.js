@@ -15,7 +15,7 @@ async function filterByTeacher(workbook) {
   sheet.eachRow((row, rowIndex) => {
     if (rowIndex > 1) {
       countTotal++;
-      const gvptValue = row.getCell(6).value; // Lấy giá trị ở cột GVPT
+      const gvptValue = row.getCell(7).value; // Lấy giá trị ở cột GVPT
       if (
         gvptValue &&
         gvptValue.trim()?.length &&
@@ -44,12 +44,12 @@ async function filterByTeacher(workbook) {
     newHeaderRow.commit(); // Lưu lại dòng mới
 
     // Lọc và sao chép dữ liệu (bao gồm style)
-    gvSheet.getColumn(2).width = 30;
-    gvSheet.getColumn(6).width = 10;
+    gvSheet.getColumn(3).width = 30;
+    gvSheet.getColumn(7).width = 10;
     sheet.eachRow((row, rowIndex) => {
       if (rowIndex > 1) {
         // Bỏ qua tiêu đề
-        const gvptValue = row.getCell(6).value; // Lấy giá trị ở cột GVPT
+        const gvptValue = row.getCell(7).value; // Lấy giá trị ở cột GVPT
         if (gvptValue?.toString()?.trim() === item.trim()) {
           countGv++;
           const newRow = gvSheet.getRow(gvSheet.lastRow.number + 1); // Dòng mới trong sheet đích
@@ -87,7 +87,7 @@ async function filterByTeacher(workbook) {
     sheet.getRow(4 + index).getCell(10).value = gv;
     let cntGV = 0;
     sheet.eachRow((row) => {
-      if (row.getCell(6).value?.trim() === gv) cntGV += 1;
+      if (row.getCell(7).value?.trim() === gv) cntGV += 1;
     });
     sheet.getRow(4 + index).getCell(11).value = cntGV;
   });
