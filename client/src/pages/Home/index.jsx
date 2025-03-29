@@ -50,7 +50,11 @@ function Home() {
     <div className="relative h-screen bg-gray-50 w-full overflow-y-auto flex flex-col p-2">
       <div className="mb-2">
         <div className="text-center font-bold mb-2">
-          <span>{dayjs().format("HH:MM, DD/MM/YYYY")}</span>
+          <Link to="/api/download" className="ml-4">
+            Tải excel
+          </Link>
+
+          <span className="ml-4">{dayjs().format("HH:MM, DD/MM/YYYY")}</span>
           <Link to="/roll-up" className="ml-4">
             Roll up
           </Link>

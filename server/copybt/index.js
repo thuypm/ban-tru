@@ -112,7 +112,11 @@ async function copyExcelDataWithStyle(
 
   // Ghi file mới
   await newWorkbook.xlsx.writeFile(targetFile);
-  console.log(`Đã sao chép dữ liệu sang file mới: ${targetFile}`);
+  console.log(
+    `Đã sao chép dữ liệu sang file mới: ${targetFile} ${dayjs().format(
+      "HH:MM, DD-MM-YYYY"
+    )}`
+  );
 }
 
 module.exports = {

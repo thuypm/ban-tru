@@ -41,6 +41,17 @@ io.on("connection", (socket) => {
     console.log("A user disconnected");
   });
 });
+app.get("/api/download", (req, res) => {
+  const filePath = path.resolve(
+    "E:/OneDrive - Marie Curie/11. bán trú/Diem danh ban tru.xlsx"
+  );
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Lỗi gửi file:", err);
+      res.status(500).send("Không thể gửi file");
+    }
+  });
+});
 app.get("/api/get-all", (req, res) => {
   res.json(getMC2RootData());
 });
