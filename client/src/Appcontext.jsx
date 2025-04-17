@@ -22,7 +22,11 @@ export function AppProvider({ children }) {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io(process.env.REACT_APP_API);
+    socketRef.current = io(process.env.REACT_APP_API, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 10,
+    });
     // socketRef.current = io("http://localhost:5000");
     socketRef.current.on("get-all", (data) => {
       setRootData(data);
@@ -32,7 +36,6 @@ export function AppProvider({ children }) {
       setMC2DataJSON(data);
     });
     socketRef.current.on("connect_error", () => {
-      socketRef.current.auth.token = "abcd";
       socketRef.current.connect();
     });
 

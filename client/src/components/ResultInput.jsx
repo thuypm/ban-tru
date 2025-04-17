@@ -18,6 +18,8 @@ function ResultInput() {
       setShowTick(false);
     }, [1000]);
   }, [findStudent]);
+
+  const inputRef = useRef(null);
   return (
     <div>
       <div className="flex items-center relative">
@@ -57,8 +59,8 @@ function ResultInput() {
       <div className="flex gap-4 px-[8px] w-full">
         <div className="flex-[1_1_auto]">
           <InputText
-            type="number"
             pattern="\d*"
+            inputMode="numeric"
             onKeyDown={(e) => {
               if (
                 !/[0-9]/.test(e.key) &&
@@ -74,6 +76,7 @@ function ResultInput() {
                 setInputData("");
               }
             }}
+            ref={inputRef}
             value={inputData}
             onChange={(e) => setInputData(e.target.value)}
             placeholder="Nhập mã định danh"
@@ -87,6 +90,7 @@ function ResultInput() {
           onClick={() => {
             if (inputData?.trim()) tickData(Number(inputData));
             setInputData("");
+            inputRef?.current?.focus();
           }}>
           Điểm danh
         </Button>
