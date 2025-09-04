@@ -13,6 +13,7 @@ const CS_ENUM = {
 function Home() {
   const { mc2dataJSON, rootData } = useAppContext();
   const registerData = useMemo(() => {
+    console.log("rootData", rootData);
     return rootData.filter((e) => e.isRegister);
   }, [rootData]);
   const mc2RegisterData = useMemo(() => {

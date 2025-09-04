@@ -7,7 +7,7 @@ function ResultInput() {
   const { dataJSON, tickData, loadData, currentValueInput } = useAppContext();
   const [inputData, setInputData] = useState("");
   const findStudent = useMemo(() => {
-    return dataJSON?.find((item) => item.code === Number(currentValueInput));
+    return dataJSON?.find((item) => item.code === currentValueInput);
   }, [dataJSON, currentValueInput]);
   const timeoutAnimation = useRef(null);
   const [showTick, setShowTick] = useState(false);

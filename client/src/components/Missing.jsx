@@ -24,11 +24,8 @@ function Missing() {
           <div
             key={item.code}
             className="flex gap-2 border-b border-b-gray-300 py-1">
-            <div className="w-6">{item.code}</div>
-            <div className="flex-1 overflow-hidden">
-              {" "}
-              {`${item.class} - ${item.name}`}
-            </div>
+            {/* <div className="w-14">{item.code}</div> */}
+            <div className="flex-1 overflow-hidden"> {`- ${item.name}`}</div>
           </div>
         ))}
       </div>

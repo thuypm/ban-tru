@@ -1,3 +1,4 @@
+import { data } from "data";
 import {
   createContext,
   useCallback,
@@ -6,7 +7,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { io } from "socket.io-client";
 
 const AppContext = createContext();
 // const ting = new Audio("/ding.mp3");
@@ -17,31 +17,15 @@ export function AppProvider({ children }) {
   const [mc2dataJSON, setMC2DataJSON] = useState([]);
   const [loading, setLoading] = useState(false);
   const [rootData, setRootData] = useState([]);
-  const [filterLocation, setFilterLocation] = useState("TV");
+  const [filterLocation, setFilterLocation] = useState("10C5");
   const [currentValueInput, setCurrentValueInput] = useState("");
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io(process.env.REACT_APP_API, {
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 10,
-    });
-    // socketRef.current = io("http://localhost:5000");
-    socketRef.current.on("get-all", (data) => {
-      setRootData(data);
-      setDataJSON(data?.filter((e) => e.isRegister));
-    });
-    socketRef.current.on("get-all-mc2", (data) => {
-      setMC2DataJSON(data);
-    });
-    socketRef.current.on("connect_error", () => {
-      socketRef.current.connect();
-    });
-
-    return () => {
-      if (socketRef.current) socketRef.current.disconnect();
-    };
+    const dataRoot = localStorage.getItem("data");
+    if (!dataRoot) localStorage.setItem("data", JSON.stringify(data));
+    setRootData(dataRoot ? JSON.parse(dataRoot) : data);
+    setDataJSON(dataRoot ? JSON.parse(dataRoot) : data);
   }, []);
 
   const loadData = useCallback(() => {
@@ -49,7 +33,36 @@ export function AppProvider({ children }) {
   }, []);
 
   const tickData = useCallback((num) => {
-    if (socketRef.current) socketRef.current.emit("tick", num);
+    setDataJSON((data) => {
+      const newData = data.map((item) => {
+        if (item.code === `${num}`) {
+          const now = new Date();
+          return {
+            ...item,
+            tick: true,
+            time: item.time?.length ? [...item.time, now] : [now],
+            lastedCheck: now,
+          };
+        }
+        return item;
+      });
+      localStorage.setItem("data", JSON.stringify(newData));
+      return newData;
+    });
+    setRootData((data) => {
+      return data.map((item) => {
+        if (item.code === `${num}`) {
+          const now = new Date();
+          return {
+            ...item,
+            tick: true,
+            time: item.time?.length ? [...item.time, now] : [now],
+            lastedCheck: now,
+          };
+        }
+        return item;
+      });
+    });
     setCurrentValueInput(`${num}`);
   }, []);
 
