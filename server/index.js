@@ -9,9 +9,8 @@ const {
   tickUpdateData,
 } = require("./syncData");
 const path = require("path");
-const { copyExcelDataWithStyle } = require("./copybt");
 const cron = require("node-cron");
-const { copyAllRootData } = require("./copybt/getlistAllData");
+const { downloadAll } = require("./copybt/downloadFile");
 
 const app = express();
 const server = http.createServer(app);
@@ -56,20 +55,23 @@ app.get("/api/get-all", (req, res) => {
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
 });
-
+async function runSync() {
+  try {
+    // await downloadAll(); // luôn tải file mới nhất trước
+    await syncRootData(); // sau đó mới xử lý dữ liệu
+  } catch (err) {
+    console.error("Lỗi khi sync:", err.message);
+  }
+}
 server.listen(5000, async () => {
   // await copyAllRootData();
   // await copyExcelDataWithStyle();
-  syncRootData();
+  await runSync();
   cron.schedule("0 6 * * *", async () => {
-    await copyAllRootData();
-    await copyExcelDataWithStyle();
-    syncRootData();
+    runSync();
   });
 
   cron.schedule("0 10 * * *", async () => {
-    await copyAllRootData();
-    await copyExcelDataWithStyle();
-    syncRootData();
+    runSync();
   });
 });

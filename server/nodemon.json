@@ -1,0 +1,5 @@
+{
+  "watch": ["."],
+  "ignore": ["copybt/*", "copybt/**"],
+  "ext": "js,json"
+}

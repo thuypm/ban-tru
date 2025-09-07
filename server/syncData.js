@@ -1,8 +1,10 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs");
+const path = require("path");
 
-const fileMC1 = "F:/OneDrive - Marie Curie/BT/BT_MC1.xlsx";
-const fileMC2 = "F:/OneDrive - Marie Curie/BT/BT_MC2.xlsx";
+const fileMC1 = path.join(__dirname, "copybt", "BT_MC1.xlsx");
+const fileMC2 = path.join(__dirname, "copybt", "BT_MC2.xlsx");
+
 function getDiffDays(base, current) {
   const msPerDay = 1000 * 60 * 60 * 24;
   const utc1 = Date.UTC(base.getFullYear(), base.getMonth(), base.getDate());

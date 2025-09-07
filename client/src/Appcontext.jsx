@@ -32,6 +32,7 @@ export function AppProvider({ children }) {
     });
     // socketRef.current = io("http://localhost:5000");
     socketRef.current.on("get-all", (data) => {
+      console.log(data);
       setRootData(data);
       setLoading(false);
     });
