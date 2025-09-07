@@ -1,13 +1,16 @@
 import { clsx } from "clsx";
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAppContext } from "../Appcontext";
 function ResultInput() {
-  const { dataJSON, tickData, loadData, currentValueInput } = useAppContext();
+  const { JSONBranchData, tickData, loadData, currentValueInput } =
+    useAppContext();
+  const dataJSON = JSONBranchData;
   const [inputData, setInputData] = useState("");
   const findStudent = useMemo(() => {
-    return dataJSON?.find((item) => item.code === Number(currentValueInput));
+    return dataJSON?.find((item) => item.VNEDUID === currentValueInput);
   }, [dataJSON, currentValueInput]);
   const timeoutAnimation = useRef(null);
   const [showTick, setShowTick] = useState(false);
@@ -20,6 +23,21 @@ function ResultInput() {
   }, [findStudent]);
 
   const inputRef = useRef(null);
+
+  const [items, setItems] = useState([]);
+  const search = (event) => {
+    if (!dataJSON) return;
+    const query = event.query.toLowerCase().trim();
+    // lọc các bản ghi có fullName chứa query
+    const results = dataJSON.filter((item) =>
+      item.fullName?.toLowerCase().includes(query)
+    );
+    // set danh sách kết quả hiển thị (tuỳ bạn muốn hiển thị gì, ví dụ fullName)
+    setItems(results.map((item) => item));
+  };
+
+  const [valueSearch, setValueSearch] = useState("");
+
   return (
     <div>
       <div className="flex items-center relative">
@@ -42,7 +60,7 @@ function ResultInput() {
           Số: {currentValueInput}{" "}
           <span className="font-semibold">
             {" "}
-            - {findStudent ? findStudent.name : `Chưa có tên`}{" "}
+            - {findStudent ? findStudent.fullName : `Chưa có tên`}{" "}
           </span>
         </p>
         <div className="absolute top0 right-1 top-4">
@@ -72,7 +90,7 @@ function ResultInput() {
             }}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
-                if (e.target.value?.trim()) tickData(Number(e.target.value));
+                if (e.target.value?.trim()) tickData(e.target.value);
                 setInputData("");
               }
             }}
@@ -83,8 +101,21 @@ function ResultInput() {
             className="border flex-1 w-full"
           />
         </div>
-
-        <Button
+        <div className="flex-[1_1_auto]">
+          <AutoComplete
+            value={valueSearch}
+            onChange={(e) => setValueSearch(e.value)}
+            field="fullName"
+            onSelect={(e) => {
+              tickData(e.value?.VNEDUID);
+              setValueSearch("");
+            }}
+            placeholder="Tìm theo tên HS"
+            suggestions={items}
+            completeMethod={search}
+          />
+        </div>
+        {/* <Button
           severity="success"
           type="button"
           onClick={() => {
@@ -93,7 +124,7 @@ function ResultInput() {
             inputRef?.current?.focus();
           }}>
           Điểm danh
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

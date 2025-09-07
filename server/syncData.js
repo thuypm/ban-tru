@@ -1,78 +1,158 @@
 const ExcelJS = require("exceljs");
-const filePath = "E:/OneDrive - Marie Curie/11. bán trú/Diem danh ban tru.xlsx";
-let jsonData = [];
-let rootData = [];
+const fs = require("fs");
 
-let MC2JsonData = [];
-const getMC2RootData = () => {
-  return MC2JsonData;
-};
-const setMC2JSonData = (val) => {
-  MC2JsonData = val;
+const fileMC1 = "F:/OneDrive - Marie Curie/BT/BT_MC1.xlsx";
+const fileMC2 = "F:/OneDrive - Marie Curie/BT/BT_MC2.xlsx";
+function getDiffDays(base, current) {
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const utc1 = Date.UTC(base.getFullYear(), base.getMonth(), base.getDate());
+  const utc2 = Date.UTC(
+    current.getFullYear(),
+    current.getMonth(),
+    current.getDate()
+  );
+  return Math.floor((utc2 - utc1) / msPerDay);
+}
+
+let rootMC1 = [];
+let rootMC2 = [];
+
+// Map header VN → EN
+const headerMap = {
+  VNEDUID: "VNEDUID",
+  "HỌ TÊN HS": "fullName",
+  "NGÀY SINH": "dob",
+  "Giới tính": "gender",
+  "CƠ SỞ": "branch",
+  LỚP: "class",
+  "SĐT PH": "parentPhone",
+  "MÃ PHÒNG": "roomCode",
+  "PHÒNG NGỦ": "sleepRoom",
+  "PHÒNG ĂN": "diningRoom",
 };
 
-const setRootData = (val) => {
-  rootData = val;
-};
-const getRootData = (val) => {
-  return rootData;
-};
-const setJSonData = (val) => {
-  return (jsonData = val);
-};
-
-const syncData = async () => {
+async function extractData(filePath, branch = "MC1") {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(filePath);
-  const worksheet = workbook.getWorksheet("cs1");
-  const MC2worksheet = workbook.getWorksheet("cs2");
+  const ws = workbook.worksheets[0]; // sheet đầu tiên
 
-  worksheet.eachRow((row, rowNumber) => {
-    if (rowNumber === 1) return; // Bỏ qua tiêu đề
-    const itemCode = row.getCell(1).value;
+  // Header từ A → J (trim trước khi map)
+  const headers = ws
+    .getRow(1)
+    .values.slice(1, 11)
+    .map((h) => (h ? String(h).trim() : ""));
 
-    jsonData.forEach((item) => {
-      if (item.id === itemCode) item.isRegister = true;
+  // Header của cột ngày (ví dụ "08/09 (T2)" ở cột K1)
+  const dateHeaderCell = ws.getRow(1).getCell(11);
+  const dateHeader =
+    dateHeaderCell && dateHeaderCell.value
+      ? String(dateHeaderCell.value).trim()
+      : "currentDate"; // fallback
+
+  const result = [];
+
+  ws.eachRow((row, rowNumber) => {
+    if (rowNumber === 1) return; // bỏ header
+    const obj = {};
+
+    // Xử lý các cột A → J
+    headers.forEach((vnHeader, idx) => {
+      const enKey = headerMap[vnHeader];
+      if (!enKey) return;
+
+      const cell = row.getCell(idx + 1);
+      obj[enKey] =
+        cell.result !== undefined
+          ? cell.result
+          : cell.value !== null && typeof cell.value === "object"
+          ? cell.value.text || cell.value.result || null
+          : cell.value;
     });
+
+    // Nếu không có VNEDUID thì bỏ qua
+    if (!obj.VNEDUID) return;
+
+    const baseDate = new Date(2025, 8, 8); // Tháng trong JS tính từ 0, nên 8 = tháng 9
+    const today = new Date(2025, 8, 8);
+    const diffDays = getDiffDays(baseDate, today);
+
+    // Cột ngày cần lấy
+    const dateColIndex = 11 + diffDays;
+
+    // Lấy header tại cột ngày
+    const dateHeaderCell = ws.getRow(1).getCell(dateColIndex);
+    // Lấy giá trị tại hàng hiện tại
+    const dateCell = row.getCell(dateColIndex);
+    let rawValue =
+      dateCell.result !== undefined
+        ? dateCell.result
+        : dateCell.value !== null && typeof dateCell.value === "object"
+        ? dateCell.value.text || dateCell.value.result || null
+        : dateCell.value;
+
+    rawValue = rawValue ? String(rawValue).trim().toLowerCase() : "";
+    obj.isRegister = rawValue === "x";
+
+    // Thêm 2 field mặc định
+    obj.tick = false;
+    obj.checkTime = [];
+    obj.branch = branch;
+
+    result.push(obj);
   });
 
-  MC2worksheet.eachRow((row, rowNumber) => {
-    if (rowNumber === 1) return; // Bỏ qua tiêu đề
-    const itemCode = row.getCell(2).value;
-    MC2JsonData.forEach((item) => {
-      if (item.id === itemCode) item.isRegister = true;
-    });
-  });
-  console.log("Dữ liệu đã được trích xuất thành công");
+  return result;
+}
+
+const syncRootData = async () => {
+  rootMC1 = await extractData(fileMC1, "MC1");
+  rootMC2 = await extractData(fileMC2, "MC2");
+  console.log("Đã sync rootMC1 & rootMC2 thành công");
 };
-
-const getJsonData = () => jsonData;
-
-const resetData = () => {
-  jsonData.forEach((e) => (e.tick = false));
-};
-
 const tickUpdateData = (code) => {
-  jsonData.forEach((item) => {
-    if (item.code === code) {
-      const timeCurrent = new Date().valueOf();
-      item.tick = true;
-      item.lastedCheck = timeCurrent;
-      item.time = item.time?.length
-        ? [timeCurrent, ...item.time]
-        : [timeCurrent];
+  rootMC1 = rootMC1.map((item) => {
+    if (item.VNEDUID === code) {
+      return {
+        ...item,
+        tick: true,
+        checkTime: [...item.checkTime, new Date()],
+      };
     }
+    return item;
+  });
+  rootMC2 = rootMC2.map((item) => {
+    if (item.VNEDUID === code) {
+      return {
+        ...item,
+        tick: true,
+        checkTime: [...item.checkTime, new Date()],
+      };
+    }
+    return item;
   });
 };
+const getRootMC1 = () => rootMC1;
+const getRootMC2 = () => rootMC2;
+const getJsonData = () => {
+  return [...getRootMC1(), ...getRootMC2()];
+};
+const exportToJson = (fileName, data) => {
+  fs.writeFileSync(fileName, JSON.stringify(data, null, 2), "utf8");
+  console.log(`Đã ghi dữ liệu ra ${fileName}`);
+};
+
+// Chạy thử để kiểm tra
+(async () => {
+  await syncRootData();
+
+  // exportToJson("rootMC1.json", getRootMC1());
+  // exportToJson("rootMC2.json", getRootMC2());
+})();
 
 module.exports = {
-  syncData,
-  getJsonData,
   tickUpdateData,
-  resetData,
-  setRootData,
-  getRootData,
-  setJSonData,
-  getMC2RootData,
-  setMC2JSonData,
+  syncRootData,
+  getRootMC1,
+  getRootMC2,
+  getJsonData,
 };

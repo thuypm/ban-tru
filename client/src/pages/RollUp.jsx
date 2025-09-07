@@ -33,9 +33,9 @@ export default function RollUp() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-auto">
+    <div className="flex flex-col h-full overflow-auto">
       {loading ? (
-        <div className="w-screen h-screen z-20 opacity-55 bg-gray-100 fixed top-0 left-0 flex items-center justify-center">
+        <div className="w-screen h-full z-20 opacity-55 bg-gray-100 fixed top-0 left-0 flex items-center justify-center">
           Đang tải....
         </div>
       ) : null}

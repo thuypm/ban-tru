@@ -3,11 +3,10 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const {
-  syncData,
+  syncRootData,
   jsonData,
   getJsonData,
   tickUpdateData,
-  getMC2RootData,
 } = require("./syncData");
 const path = require("path");
 const { copyExcelDataWithStyle } = require("./copybt");
@@ -30,11 +29,10 @@ io.on("connection", (socket) => {
   console.log("A user connected");
   // Send initial data
   socket.emit("get-all", getJsonData());
-  socket.emit("get-all-mc2", getMC2RootData());
   // Handle tick event
   socket.on("tick", (code) => {
     tickUpdateData(code);
-    io.emit("get-all", getJsonData()); // Broadcast updated data to all clients
+    io.emit("tick-a-item", code);
   });
 
   socket.on("disconnect", () => {
@@ -60,18 +58,18 @@ app.get("*", (req, res) => {
 });
 
 server.listen(5000, async () => {
-  await copyAllRootData();
-  await copyExcelDataWithStyle();
-  syncData();
+  // await copyAllRootData();
+  // await copyExcelDataWithStyle();
+  syncRootData();
   cron.schedule("0 6 * * *", async () => {
     await copyAllRootData();
     await copyExcelDataWithStyle();
-    syncData();
+    syncRootData();
   });
 
   cron.schedule("0 10 * * *", async () => {
     await copyAllRootData();
     await copyExcelDataWithStyle();
-    syncData();
+    syncRootData();
   });
 });
