@@ -75,7 +75,7 @@ async function extractData(filePath, branch = "MC1") {
     if (!obj.VNEDUID) return;
 
     const baseDate = new Date(2025, 8, 8); // Tháng trong JS tính từ 0, nên 8 = tháng 9
-    const today = new Date(2025, 8, 8);
+    const today = new Date();
     const diffDays = getDiffDays(baseDate, today);
 
     // Cột ngày cần lấy
@@ -143,13 +143,13 @@ const exportToJson = (fileName, data) => {
   console.log(`Đã ghi dữ liệu ra ${fileName}`);
 };
 
-// Chạy thử để kiểm tra
-(async () => {
-  await syncRootData();
+// // Chạy thử để kiểm tra
+// (async () => {
+//   await syncRootData();
 
-  // exportToJson("rootMC1.json", getRootMC1());
-  // exportToJson("rootMC2.json", getRootMC2());
-})();
+//   // exportToJson("rootMC1.json", getRootMC1());
+//   // exportToJson("rootMC2.json", getRootMC2());
+// })();
 
 module.exports = {
   tickUpdateData,

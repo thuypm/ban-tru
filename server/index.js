@@ -57,7 +57,7 @@ app.get("*", (req, res) => {
 });
 async function runSync() {
   try {
-    // await downloadAll(); // luôn tải file mới nhất trước
+    await downloadAll(); // luôn tải file mới nhất trước
     await syncRootData(); // sau đó mới xử lý dữ liệu
   } catch (err) {
     console.error("Lỗi khi sync:", err.message);
