@@ -3,8 +3,8 @@ const fs = require("fs");
 const qs = require("querystring");
 const path = require("path");
 
-// const tenantId = "";
-// const clientId = "";
+const tenantId = "927baee0-3a5b-4b51-a0bb-1b3d48cc21fd";
+const clientId = "91195357-0fe3-4215-b267-22bdf7b045eb";
 
 const tokensFile = path.join(__dirname, "tokens.json"); // ✅ an toàn hơn
 
