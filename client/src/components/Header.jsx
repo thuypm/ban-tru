@@ -1,7 +1,5 @@
-import dayjs from "dayjs";
 import { Dropdown } from "primereact/dropdown";
 import { useMemo } from "react";
-import { Link } from "react-router";
 import { useAppContext } from "../Appcontext";
 export default function Header() {
   const { filterLocation, setFilterLocation, JSONBranchData } = useAppContext();
@@ -12,11 +10,8 @@ export default function Header() {
     return uniqueLocations;
   }, [JSONBranchData]);
   return (
-    <div className="flex justify-between items-center px-2">
-      <h2 className="text-xl font-bold text-center">
-        <Link to={"/"}>{dayjs().format("ddd, DD-MM-YY")}</Link>
-      </h2>
-      <div className="px-4 flex gap-4">
+    <div className="flex justify-between items-center">
+      <div className="flex gap-4">
         <Dropdown
           className="w-40"
           options={uniqueLocations.map((e) => ({
