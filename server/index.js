@@ -52,6 +52,12 @@ app.get("/api/download", (req, res) => {
 app.get("/api/get-all", (req, res) => {
   res.json(getMC2RootData());
 });
+app.get("/api/sync-data", async (req, res) => {
+  await runSync();
+  res.json({
+    message: "ok",
+  });
+});
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
 });
@@ -67,11 +73,23 @@ server.listen(5000, async () => {
   // await copyAllRootData();
   // await copyExcelDataWithStyle();
   await runSync();
-  cron.schedule("0 6 * * *", async () => {
-    runSync();
-  });
+  cron.schedule(
+    "0 6 * * *",
+    async () => {
+      runSync();
+    }
+    // {
+    //   timezone: "Asia/Ho_Chi_Minh",
+    // }
+  );
 
-  cron.schedule("0 10 * * *", async () => {
-    runSync();
-  });
+  cron.schedule(
+    "0 10 * * *",
+    async () => {
+      runSync();
+    }
+    // {
+    //   timezone: "Asia/Ho_Chi_Minh",
+    // }
+  );
 });
