@@ -108,7 +108,10 @@ async function extractData(filePath, branch = "MC1") {
 
 const syncRootData = async () => {
   rootMC1 = await extractData(fileMC1, "MC1");
+
   rootMC2 = await extractData(fileMC2, "MC2");
+  // fs.writeFileSync("rootMC1.json", JSON.stringify(rootMC1, null, 2), "utf8");
+  //fs.writeFileSync("rootMC2.json", JSON.stringify(rootMC2, null, 2), "utf8");
   console.log("Đã sync rootMC1 & rootMC2 thành công");
 };
 const tickUpdateData = (code) => {
