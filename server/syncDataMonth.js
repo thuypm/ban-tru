@@ -31,7 +31,7 @@ async function extractData(filePath, branch = "MC1") {
   // Header từ A → J (trim trước khi map)
   const headers = ws
     .getRow(1)
-    .values.slice(1, 11)
+    .values.slice(1, 13)
     .map((h) => (h ? String(h).trim() : ""));
 
   const result = [];

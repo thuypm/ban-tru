@@ -41,11 +41,11 @@ async function extractData(filePath, branch = "MC1") {
   // Header từ A → J (trim trước khi map)
   const headers = ws
     .getRow(1)
-    .values.slice(1, 11)
+    .values.slice(1, 13)
     .map((h) => (h ? String(h).trim() : ""));
 
   // Header của cột ngày (ví dụ "08/09 (T2)" ở cột K1)
-  const dateHeaderCell = ws.getRow(1).getCell(11);
+  const dateHeaderCell = ws.getRow(1).getCell(13);
   const dateHeader =
     dateHeaderCell && dateHeaderCell.value
       ? String(dateHeaderCell.value).trim()
@@ -79,7 +79,7 @@ async function extractData(filePath, branch = "MC1") {
     const diffDays = getDiffDays(baseDate, today);
 
     // Cột ngày cần lấy
-    const dateColIndex = 11 + diffDays;
+    const dateColIndex = 13 + diffDays;
 
     // Lấy header tại cột ngày
     const dateHeaderCell = ws.getRow(1).getCell(dateColIndex);
