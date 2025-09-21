@@ -10,9 +10,7 @@ function Eated() {
   // ?.sort((a, b) => b.lastedCheck - a.lastedCheck);
 
   const list = useMemo(() => {
-    const registerData = JSONBranchData?.filter((e) => {
-      return e.isRegister;
-    });
+    const registerData = JSONBranchData;
     return filterLocation?.length
       ? registerData
           ?.filter((e) => e.diningRoom === filterLocation)

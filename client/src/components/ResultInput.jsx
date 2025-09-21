@@ -10,7 +10,7 @@ function ResultInput() {
   const dataJSON = JSONBranchData;
   const [inputData, setInputData] = useState("");
   const findStudent = useMemo(() => {
-    return dataJSON?.find((item) => item.VNEDUID === currentValueInput);
+    return dataJSON?.find((item) => `${item.VNEDUID}` === currentValueInput);
   }, [dataJSON, currentValueInput]);
   const timeoutAnimation = useRef(null);
   const [showTick, setShowTick] = useState(false);
@@ -52,7 +52,7 @@ function ResultInput() {
           className={clsx(
             "mt-4 text-lg text-center my-2 py-2 flex-1",
             currentValueInput
-              ? findStudent
+              ? findStudent && findStudent.isRegister
                 ? "bg-green-100"
                 : "bg-red-100"
               : ""

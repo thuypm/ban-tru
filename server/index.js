@@ -11,6 +11,7 @@ const {
 const path = require("path");
 const cron = require("node-cron");
 const { downloadAll } = require("./copybt/downloadFile");
+const { syncDataMonth } = require("./syncDataMonth");
 
 const app = express();
 const server = http.createServer(app);
@@ -58,13 +59,24 @@ app.get("/api/sync-data", async (req, res) => {
     message: "ok",
   });
 });
+app.get("/api/get-month", async (req, res) => {
+  const workbook = await syncDataMonth();
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader("Content-Disposition", 'attachment; filename="report.xlsx"');
+  await workbook.xlsx.write(res); // ghi trực tiếp vào response
+  res.end();
+});
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
 });
 async function runSync() {
   try {
     await downloadAll(); // luôn tải file mới nhất trước
-    await syncRootData(); // sau đó mới xử lý dữ liệu
+    await syncRootData(); // luôn tải file mới nhất trước
+    // await syncDataMonth(); // sau đó mới xử lý dữ liệu
   } catch (err) {
     console.error("Lỗi khi sync:", err.message);
   }

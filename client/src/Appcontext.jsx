@@ -17,7 +17,7 @@ export function AppProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [rootData, setRootData] = useState([]);
   const [selectBranch, setSelectBranch] = useState("MC1");
-  const [filterLocation, setFilterLocation] = useState("TV");
+  const [filterLocation, setFilterLocation] = useState("D101");
   const [currentValueInput, setCurrentValueInput] = useState("");
   const socketRef = useRef(null);
   const JSONBranchData = useMemo(() => {
@@ -32,14 +32,13 @@ export function AppProvider({ children }) {
     });
     // socketRef.current = io("http://localhost:5000");
     socketRef.current.on("get-all", (data) => {
-      console.log(data);
       setRootData(data);
       setLoading(false);
     });
     socketRef.current.on("tick-a-item", (data) => {
       setRootData((prev) =>
         prev.map((item) => {
-          if (item.VNEDUID === data) {
+          if (`${item.VNEDUID}` === data) {
             return {
               ...item,
               tick: true,

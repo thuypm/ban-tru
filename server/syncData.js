@@ -93,10 +93,11 @@ async function extractData(filePath, branch = "MC1") {
         : dateCell.value;
 
     rawValue = rawValue ? String(rawValue).trim().toLowerCase() : "";
-    obj.isRegister = rawValue === "x";
+    obj.isRegister = rawValue === "1";
 
     // Thêm 2 field mặc định
     obj.tick = false;
+    obj.VNEDUID = String(obj.VNEDUID).trim();
     obj.checkTime = [];
     obj.branch = branch;
 
@@ -108,7 +109,6 @@ async function extractData(filePath, branch = "MC1") {
 
 const syncRootData = async () => {
   rootMC1 = await extractData(fileMC1, "MC1");
-
   rootMC2 = await extractData(fileMC2, "MC2");
   // fs.writeFileSync("rootMC1.json", JSON.stringify(rootMC1, null, 2), "utf8");
   //fs.writeFileSync("rootMC2.json", JSON.stringify(rootMC2, null, 2), "utf8");
@@ -150,8 +150,8 @@ const exportToJson = (fileName, data) => {
 // (async () => {
 //   await syncRootData();
 
-//   // exportToJson("rootMC1.json", getRootMC1());
-//   // exportToJson("rootMC2.json", getRootMC2());
+//   exportToJson("rootMC1.json", getRootMC1());
+//   exportToJson("rootMC2.json", getRootMC2());
 // })();
 
 module.exports = {
